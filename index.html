@@ -1,0 +1,70 @@
+<html>
+
+
+    <h1>Hugging Face LLM Tester</h1>
+
+    <h3 style="margin: 0; padding: 0;">Example LINK: </h3>
+    <p  style="margin: 0; padding: 0;">https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct</p>
+    <p  style="margin: 0; padding: 0;">https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B</p>
+    <p  style="margin: 0; padding: 0;">https://api-inference.huggingface.co/models/microsoft/Phi-3-mini-4k-instruct</p>
+    <p  style="margin: 0; padding: 0;">https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3</p>
+    <br />
+
+    <label>LLM Link</label>
+    <input id="llmlink" type="text" style="width: 50%;" placeholder="example: https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct">
+
+    <br />
+    <br />
+    <label>LLM Token Code</label>
+    <input id="code" type="text" style="width: 50%;" placeholder="example: hf_xxxxxxxxxxx">
+
+    <br />
+    <br />
+    <b>Example prompt:</b>
+    <br/>
+    <p style="margin: 0; padding: 0;">Create a simple diagram using vis.js library</p>
+    <p style="margin: 0; padding: 0;">what is the distance between moon and sun</p>
+
+    <br />
+    <label>Prompt</label>
+    <input id="prompt" type="text" style="width: 50%;" placeholder="example: What is the meaning of life?">
+
+    <br />
+    <br />
+    <button onclick="testllm()">Test LLM</button>
+
+    <br />
+    <h2>Output Response</h2>
+    <p id="output" style="border: 1px solid red; width: 50%; height: 240px; font-size: 18px;">
+
+    </p>
+
+    <script>
+        async function testllm() {
+            //fetch('https://a.picoapps.xyz/ask-ai?prompt=' + prompt.value)
+            const linkelement   = document.getElementById("llmlink");
+            const codeelement   = document.getElementById("code");
+            const promptelement = document.getElementById("prompt");
+            const outputelement = document.getElementById("output");
+            // const response = await fetch('https://a.picoapps.xyz/ask-ai?prompt=' + promptelement.value + '&code=' + codeelement.value + '&link=' + linkelement.value);
+            // const data     = await response.json();
+            // outputelement.innerHTML = data.answer;
+
+            const response = await fetch( linkelement.value, {
+                method: 'POST',
+                headers: {
+                    'Content-Type':  'application/json',
+                    'Authorization': 'Bearer ' + codeelement.value
+                },
+                body: JSON.stringify({ 'inputs': promptelement.value })
+            });
+            //const data              = await response.json();
+            //outputelement.innerHTML = data.answer;
+
+            const d = await response.text();
+            outputelement.innerHTML = d;
+
+        }
+    </script>
+
+</html>
