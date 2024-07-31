@@ -1,16 +1,10 @@
 <html style="text-align: center; font-size: 1.2rem;">
     <h1> BASIC AI TESTER </h1>
-    <br />
 
-    <label>API key Code</label>
-    <br />
-    <input id="code" type="text" style="width: 50%; font-size: 1.1rem;" placeholder="example: hf_xxxxxxxxxxx">
-
-    <br />
     <br />
     <b>Example prompt:</b>
     <br/>
-    <p style="margin: 0; padding: 0;">Create a simple diagram using vis.js library</p>
+    <p style="margin: 0; padding: 0;">Create a simple diagram using vis.js library provide a JSON output</p>
     <p style="margin: 0; padding: 0;">what is the distance between moon and sun</p>
 
     <br />
@@ -25,7 +19,8 @@
 
     <br />
     <br />
-    <button onclick="testllm()">Test LLM</button>
+    <button onclick="testllm()">Test DeepAI</button>
+    <button onclick="testllm2()">Test Together AI</button>
 
     <br />
     <h2>Output Response</h2>
@@ -34,51 +29,78 @@
     </p>
 
     <script>
-        // async function testllm() {
-        //     //fetch('https://a.picoapps.xyz/ask-ai?prompt=' + prompt.value)
-        //     const linkelement   = document.getElementById("llmlink");
-        //     const codeelement   = document.getElementById("code");
-        //     const promptelement = document.getElementById("prompt");
-        //     const outputelement = document.getElementById("output");
-        //     // const response = await fetch('https://a.picoapps.xyz/ask-ai?prompt=' + promptelement.value + '&code=' + codeelement.value + '&link=' + linkelement.value);
-        //     // const data     = await response.json();
-        //     // outputelement.innerHTML = data.answer;
-
-        //     const response = await fetch( linkelement.value, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type':  'application/json',
-        //             'Authorization': 'Bearer ' + codeelement.value
-        //         },
-        //         body: JSON.stringify({ 'inputs': promptelement.value })
-        //     });
-        //     //const data              = await response.json();
-        //     //outputelement.innerHTML = data.answer;
-
-        //     const d = await response.text();
-        //     outputelement.innerHTML = d;
-        // }
-
         async function testllm() {
             const linkelement   = document.getElementById("llmlink");
-            const codeelement   = document.getElementById("code");
             const promptelement = document.getElementById("prompt");
             const outputelement = document.getElementById("output");
+            
+            const response = await fetch( 'https://api.deepseek.com/chat/completions', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type':     'application/json', 
+                    'Accept':           'application/json', 
+                    'Authorization':    'Bearer sk-2c18285017674b55932c7b0c1d354a7c'
+                },
+                body: JSON.stringify({
+                    messages: [
+                        {
+                            role:   'system',
+                            content: 'You are a helpful assistant'
+                        },
+                        {
+                            role:   'user',
+                            content: promptelement.value
+                        }
+                    ],
+                    "model": "deepseek-coder",
+                    "frequency_penalty": 0,
+                    "max_tokens": 2048,
+                    "presence_penalty": 0,
+                    "response_format": {
+                        "type": "text"
+                    },
+                    "stop": null,
+                    "stream": false,
+                    "stream_options": null,
+                    "temperature": 1,
+                    "top_p": 1,
+                    "tools": null,
+                    "tool_choice": "none",
+                    "logprobs": false,
+                    "top_logprobs": null
 
+                })
+            });
+
+            const d = await response.text();
+            outputelement.innerHTML = d;
+        }
+
+        //====================
+        async function testllm2() {
+            const linkelement   = document.getElementById("llmlink");
+            const promptelement = document.getElementById("prompt");
+            const outputelement = document.getElementById("output");
+            
             const response = await fetch( 'https://api.together.xyz/v1/chat/completions', {
                 method: 'POST',
                 headers: {
-                    accept:         'application/json',
-                    'content-type': 'application/json',
-                    Authorization:  `Bearer ${codeelement.value}`
+                    accept:             'application/json',
+                    'content-type':     'application/json',
+                    Authorization:      'Bearer 7c795409f81befb0cf3dc7e7a0940930cc35e3025fc918bc8db3dfdba2a115f8'
                 },
                 body: JSON.stringify({
-                    message: [
+                    messages: [
                         {
                             role:   'system',
+                            content: 'You are a helpful assistant'
+                        },
+                        {
+                            role:   'user',
                             content: promptelement.value
                         }
-                    ]
+                    ],
+                    model: 'mistralai/Mixtral-8x7B-Instruct-v0.1'
                 })
             });
 
@@ -89,42 +111,3 @@
 
 </html>
 
-
-
-<!-- <h1>Hugging Face LLM Tester</h1>
-
-    <h3 style="margin: 0; padding: 0;">Example LINK: </h3>
-    <p  style="margin: 0; padding: 0;">https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct</p>
-    <p  style="margin: 0; padding: 0;">https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B</p>
-    <p  style="margin: 0; padding: 0;">https://api-inference.huggingface.co/models/microsoft/Phi-3-mini-4k-instruct</p>
-    <p  style="margin: 0; padding: 0;">https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3</p>
-    <br />
-
-    <label>LLM Link</label>
-    <input id="llmlink" type="text" style="width: 50%;" placeholder="example: https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct">
-
-    <br />
-    <br />
-    <label>LLM Token Code</label>
-    <input id="code" type="text" style="width: 50%;" placeholder="example: hf_xxxxxxxxxxx">
-
-    <br />
-    <br />
-    <b>Example prompt:</b>
-    <br/>
-    <p style="margin: 0; padding: 0;">Create a simple diagram using vis.js library</p>
-    <p style="margin: 0; padding: 0;">what is the distance between moon and sun</p>
-
-    <br />
-    <label>Prompt</label>
-    <input id="prompt" type="text" style="width: 50%;" placeholder="example: What is the meaning of life?">
-
-    <br />
-    <br />
-    <button onclick="testllm()">Test LLM</button>
-
-    <br />
-    <h2>Output Response</h2>
-    <p id="output" style="border: 1px solid red; width: 50%; height: 240px; font-size: 18px;">
-
-    </p> -->
